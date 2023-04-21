@@ -18,7 +18,8 @@ public class Main {
      *This function enters the user's account by getting the details
      */
     public static void sign_in(Passenger[] passenger, Fly[] fly, Ticket[] ticket) {
-        try {
+        try
+        {
             Scanner input = new Scanner(System.in);
             System.out.print("Enter username: ");
             String user = input.nextLine();
