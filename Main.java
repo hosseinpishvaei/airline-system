@@ -7,18 +7,22 @@ public class Main {
         Passenger[] passenger = new Passenger[50];
         Fly[] fly = new Fly[50];
         Ticket[] ticket = new Ticket[50];
-        fly[0] = new Fly("wx_12", "Yazd", "Tehran", 5, 7, 1401, 30, 15, 1500000, 54);
-        fly[1] = new Fly("wz_15", "Yazd", "Ahvaz", 11, 12, 1401, 0, 8, 900000, 245);
-        fly[2] = new Fly("BG_22", "Shiraz", "Tabriz", 12, 12, 1401, 30, 22, 1100000, 12);
-        fly[3] = new Fly("NM_52", "Tabriz", "Ahvaz", 52, 6, 1401, 25, 15, 2500000, 82);
+//        fly[0] = new Fly("wx_12", "Yazd", "Tehran", 5, 7, 1401, 30, 15, 1500000, 54);
+//        fly[1] = new Fly("wz_15", "Yazd", "Ahvaz", 11, 12, 1401, 0, 8, 900000, 245);
+//        fly[2] = new Fly("BG_22", "Shiraz", "Tabriz", 12, 12, 1401, 30, 22, 1100000, 12);
+//        fly[3] = new Fly("NM_52", "Tabriz", "Ahvaz", 52, 6, 1401, 25, 15, 2500000, 82);
         MENUE_OPTIONS(passenger, fly, ticket);
     }
+
+    /**
+     *This function enters the user's account by getting the details
+     */
     public static void sign_in(Passenger[] passenger, Fly[] fly, Ticket[] ticket) {
         try {
             Scanner input = new Scanner(System.in);
-            System.out.println("Enter username: ");
+            System.out.print("Enter username: ");
             String user = input.nextLine();
-            System.out.println("Enter password ");
+            System.out.print("Enter password: ");
             int pass = input.nextInt();
             if (user.equals("H") && pass == 1)
                 admin_MENUE(passenger, fly, ticket);
@@ -41,6 +45,10 @@ public class Main {
         }
 
     }
+
+    /**
+     *This function creates an account for the user by getting the information
+     */
     public static void sign_up(Passenger[] passenger, Fly[] fly, Ticket[] ticket) {
         Scanner input = new Scanner(System.in);
         System.out.print("Enter username: ");
@@ -48,7 +56,9 @@ public class Main {
         System.out.print("Enter password: ");
         int pass = input.nextInt();
         for (int i = 0; i < 50; i++) {
-            if (passenger[i] == null) {
+            if (check_passenger(passenger,user))
+            {
+                if (passenger[i] == null) {
                 // System.out.println(i);
                 passenger[i] = new Passenger();
                 passenger[i].setUsername(user);
@@ -56,24 +66,58 @@ public class Main {
                 System.out.println("Your account has been created");
                 MENUE_OPTIONS(passenger, fly, ticket);
                 break;
+             }
             }
+            else {
+                System.err.println("There is a user with this username");
+                sign_up(passenger,fly,ticket);
+            }
+
         }
     }
+
+    /**
+     *This function checks if the username is duplicated
+     */
+    public static boolean check_passenger(Passenger[] passenger,String user)
+    {
+        for (int i = 0; passenger[i]!=null; i++) {
+            if (passenger[i].getUsername().equals(user))
+                return false;
+        }
+        return true;
+    }
+
+    /**
+     *This function prints the menu and passes it to the desired function according to the user's choice
+     */
     public static void MENUE_OPTIONS(Passenger[] passenger, Fly[] fly, Ticket[] ticket) {
         Scanner input = new Scanner(System.in);
-        System.out.println("MENUE OPTIONS \n <1>sign in \n <2>sign up");
-        switch (input.nextInt()) {
-            case 1:
-                sign_in(passenger, fly, ticket);
-                break;
-            case 2:
-                sign_up(passenger, fly, ticket);
-                break;
-            default:
-                System.out.println("Your select invalid!");
-                MENUE_OPTIONS(passenger, fly, ticket);
+        try {
+            System.out.println("MENUE OPTIONS \n <1>sign in \n <2>sign up");
+            switch (input.nextInt()) {
+                case 1:
+                    sign_in(passenger, fly, ticket);
+                    break;
+                case 2:
+                    sign_up(passenger, fly, ticket);
+                    break;
+                default:
+                    System.out.println("Your select invalid!");
+                    MENUE_OPTIONS(passenger, fly, ticket);
+            }
         }
+        catch (Exception b)
+        {
+            System.err.println("your command must be a number");
+            MENUE_OPTIONS(passenger,fly,ticket);
+        }
+
     }
+
+    /**
+     *This function prints the admin menu and passes it to the desired function according to the user's choice
+     */
     public static void admin_MENUE(Passenger[] passenger, Fly[] fly, Ticket[] ticket) {
         Scanner input = new Scanner(System.in);
         System.out.println("ADMIN MENUE OPTIONS");
@@ -106,6 +150,10 @@ public class Main {
             }
         }
     }
+
+    /**
+     *This function prints all flights
+     */
     public static void print_flightList(Fly[] fly) {
         System.out.println("|FlightId" + "\t" + "|" + "origin" + "\t" + "\t" + "|" + "Destination" + "\t" + "|" + "Date" + "\t" + "\t" + "\t" + "|" + "Time" + "\t" + "\t" + "|" +
                 "Price" + "\t" + "\t" + "\t" + "|" + "Seats");
@@ -117,13 +165,17 @@ public class Main {
 //                            fly[i].getMonth() + "-" + fly[i].getDay() + "\t" +"\t"+"|"+ fly[i].getHour() + ":" + fly[i].getMin() + "\t" +"\t"+"|"+ fly[i].getPrice() + "\t" +"\t"+"\t"+"|"+ fly[i].getSeats());
 //                    continue;
 //                }
-                System.out.println(fly[i].getFlightId() + "\t" + "\t" + "|" + fly[i].getOrigin() + "\t" + "\t" + "|" + fly[i].getDestination() + "\t" + "\t" + "\t" + "|" + fly[i].getYear() + "-" +
+                System.out.println("|"+fly[i].getFlightId() + "\t" + "\t" + "|" + fly[i].getOrigin() + "\t" + "\t" + "|" + fly[i].getDestination() + "\t" + "\t" + "\t" + "|" + fly[i].getYear() + "-" +
                         fly[i].getMonth() + "-" + fly[i].getDay() + "\t" + "\t" + "|" + fly[i].getHour() + ":" + fly[i].getMin() + "\t" + "\t" + "|" + fly[i].getPrice() + "\t" + "\t" + "|" + fly[i].getSeats());
             } else {
                 break;
             }
         }
     }
+
+    /**
+     *This function receives flight details from the user and adds that flight to the list of flights
+     */
     public static void add_flight(Passenger[] passenger, Fly[] fly, Ticket[] ticket) {
         Scanner input = new Scanner(System.in);
         //  print_flightList(fly);
@@ -166,6 +218,10 @@ public class Main {
         //print_flightList(fly);
         admin_MENUE(passenger, fly, ticket);
     }
+
+    /**
+     *This function checks that the flightId is not duplicated
+     */
     public static boolean check_flightId(Fly[] fly,String flightId)
     {
         for (int i=0;i<50;i++) {
@@ -176,6 +232,10 @@ public class Main {
         }
         return true;
     }
+
+    /**
+     *This function returns the index of the first fly class which is null
+     */
     public static int number_of_flights(Fly[] fly) {
         int i;
         for (i = 0; i < 50; i++) {
@@ -186,6 +246,10 @@ public class Main {
         }
         return i;
     }
+
+    /**
+     * This function changes a characteristic of the flight that the user wants
+     */
     public static void update_flight(Passenger[] passenger, Fly[] fly, Ticket[] ticket) {
         int i = 0;
         Scanner input = new Scanner(System.in);
@@ -258,12 +322,20 @@ public class Main {
         }
         admin_MENUE(passenger, fly, ticket);
     }
+
+    /**
+     *This function takes the flight index and prints that flight
+     */
     public static void print_one_flight(Fly[] fly, int i) {
         System.out.println("|FlightId" + "\t" + "|" + "origin" + "\t" + "\t" + "|" + "Destination" + "\t" + "|" + "Date" + "\t" + "\t" + "\t" + "|" + "Time" + "\t" + "\t" + "|" +
                 "Price" + "\t" + "\t" + "\t" + "|" + "Seats");
-        System.out.println(fly[i].getFlightId() + "\t" + "\t" + "|" + fly[i].getOrigin() + "\t" + "\t" + "|" + fly[i].getDestination() + "\t" + "\t" + "\t" + "|" + fly[i].getYear() + "-" +
+        System.out.println("|"+fly[i].getFlightId() + "\t" + "\t" + "|" + fly[i].getOrigin() + "\t" + "\t" + "|" + fly[i].getDestination() + "\t" + "\t" + "\t" + "|" + fly[i].getYear() + "-" +
                 fly[i].getMonth() + "-" + fly[i].getDay() + "\t" + "\t" + "|" + fly[i].getHour() + ":" + fly[i].getMin() + "\t" + "\t" + "|" + fly[i].getPrice() + "\t" + "\t" + "|" + fly[i].getSeats());
     }
+
+    /**
+     *This function joins the flight index and removes the empty space
+     */
     public static void sort_the_list_of_flights(Fly[] fly) {
         for (int i = 0; i < 50; i++) {
             if (fly[i] == null && i + 1 < 50 && fly[i + 1] != null) {
@@ -282,6 +354,10 @@ public class Main {
             }
         }
     }
+
+    /**
+     *This function takes the flightId from the user and deletes that flight
+     */
     public static void remove_flight(Passenger[] passenger, Fly[] fly, Ticket[] ticket) {
         int i = 0;
         Scanner input = new Scanner(System.in);
@@ -300,6 +376,10 @@ public class Main {
         sort_the_list_of_flights(fly);
         admin_MENUE(passenger, fly, ticket);
     }
+
+    /**
+     *This function prints the passenger's menu and executes the desired function according to the user's choice
+     */
     public static void passenger_MENUE(Passenger[] passenger, Fly[] fly, int n, Ticket[] ticket) {
         int[] ary = new int[50];
         ary(ary);
@@ -341,6 +421,10 @@ public class Main {
             }
         }
     }
+
+    /**
+     *This function replaces the old password with a new password
+     */
     public static void change_password(Passenger[] passenger, Fly[] fly, int n, Ticket[] ticket) {
         Scanner input = new Scanner(System.in);
         System.out.print("Enter a new password: ");
@@ -349,6 +433,9 @@ public class Main {
         passenger_MENUE(passenger, fly, n, ticket);
     }
 
+    /**
+     *This function filters the flights according to the user's choices and shows them to the user
+     */
     public static void search_flight_ticket(Passenger[] passenger, Fly[] fly, int[] ary,int n,Ticket[] ticket) {
         Scanner input = new Scanner(System.in);
         System.out.println("Select the desired filter(You can filter based on several elements):");
@@ -373,7 +460,6 @@ public class Main {
                 System.out.println("Enter origin: ");
                 input.nextLine();
                 String or = input.nextLine();
-                printary(ary);
                 System.out.println("|FlightId" + "\t" + "|" + "origin" + "\t" + "\t" + "|" + "Destination" + "\t" + "|" + "Date" + "\t" + "\t" + "\t" + "|" + "Time" + "\t" + "\t" + "|" +
                         "Price" + "\t" + "\t" + "\t" + "|" + "Seats");
                 for (int i = 0; i < 50; i++) {
@@ -453,7 +539,7 @@ public class Main {
             case 6: {
                 System.out.print("Enter first of range: ");
                 int first = input.nextInt();
-                System.out.println("Enter end of range: ");
+                System.out.print("Enter end of range: ");
                 int end = input.nextInt();
                 System.out.println("|FlightId" + "\t" + "|" + "origin" + "\t" + "\t" + "|" + "Destination" + "\t" + "|" + "Date" + "\t" + "\t" + "\t" + "|" + "Time" + "\t" + "\t" + "|" +
                         "Price" + "\t" + "\t" + "\t" + "|" + "Seats");
@@ -479,12 +565,18 @@ public class Main {
         }
     }
 
+    /**
+     *This function puts the number 1 in all indices of ary
+     */
     public static void ary(int[] ary) {
         for (int i = 0; i < 50; i++) {
             ary[i] = 1;
         }
     }
 
+    /**
+     *This function puts the number 1 in the indices where the number 2 is and puts the number 0 in the indices where the number 1 is present.
+     */
     public static void sort_ary(int[] ary) {
         for (int i = 0; i < 50; i++) {
             if (ary[i] == 2) {
@@ -496,12 +588,9 @@ public class Main {
         }
     }
 
-    public static void printary(int[] ary) {
-        for (int i = 0; i < 50; i++) {
-            System.out.print(ary[i]);
-        }
-    }
-
+    /**
+     *This function takes the flightId from the user and reserves that flight
+     */
     public static void booking_ticket(Passenger[] passenger, Fly[] fly, Ticket[] ticket, int n) {
         Scanner input = new Scanner(System.in);
         System.out.print("Enter flightId: ");
@@ -545,6 +634,9 @@ public class Main {
         passenger_MENUE(passenger,fly,n,ticket);
     }
 
+    /**
+     *This function checks that the TicketId is not duplicated
+     */
         public static boolean check_ticketId (Ticket[]ticket ,int c)
         {
             boolean flag = true;
@@ -554,7 +646,11 @@ public class Main {
             }
             return true;
         }
-        public static int number_of_tickets (Ticket[]ticket)
+
+    /**
+     *This function returns the first null index of the Ticket class
+     */
+    public static int number_of_tickets (Ticket[]ticket)
         {
             for (int i = 0; i < 50; i++) {
                 if (ticket[i] == null)
@@ -562,6 +658,10 @@ public class Main {
             }
             return 50;
         }
+
+    /**
+     *This function joins the ticket class indices together and removes the empty spaces
+     */
     public static void sort_the_list_of_tickets(Ticket[] ticket) {
         for (int i = 0; i < 50; i++) {
             if (ticket[i] == null && i + 1 < 50 && ticket[i + 1] != null) {
@@ -573,6 +673,10 @@ public class Main {
             }
         }
     }
+
+    /**
+     *This function takes the ticket ID from the user and cancels the ticket
+     */
     public static void ticket_cancellation(Ticket[] ticket,Passenger[] passenger,Fly[] fly,int n)
     {
         Scanner input=new Scanner(System.in);
@@ -597,6 +701,10 @@ public class Main {
         }
         passenger_MENUE(passenger,fly,n,ticket);
     }
+
+    /**
+     *This function takes the flightID and returns the index of that flight
+     */
     public static int search_flightId(Fly[] fly,String flightId)
     {
         for (int i = 0; i < 50; i++) {
@@ -608,6 +716,9 @@ public class Main {
         return -1;
     }
 
+    /**
+     *This function shows the reserved tickets
+     */
     public static void booked_tickets(Ticket[] ticket,Passenger[] passenger,Fly[] fly,int n)
     {
         for (int i = 0; i < 50; i++) {
@@ -619,6 +730,10 @@ public class Main {
         }
         passenger_MENUE(passenger,fly,n,ticket);
     }
+
+    /**
+     *This function takes the charge amount from the user and adds it to the account charge
+     */
     public static void add_charge(Ticket[] ticket,Passenger[] passenger,Fly[] fly,int n)
     {
         Scanner input = new Scanner(System.in);
