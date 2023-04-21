@@ -216,6 +216,7 @@ public class Main {
         System.out.println("Enter the number of seats: ");
         fly[n].setSeats(input.nextInt());
         //print_flightList(fly);
+        System.out.println("Flight added");
         admin_MENUE(passenger, fly, ticket);
     }
 
